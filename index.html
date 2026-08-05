@@ -21,6 +21,7 @@
       <p class="c-masthead__tagline">a ramping metronome</p>
     </header>
 
+    <div class="o-layout">
     <section class="c-hero" aria-label="Current tempo">
       <div class="c-hero__figure" id="hero-pulse">
         <span class="c-hero__bpm" id="hero-bpm">60</span>
@@ -37,8 +38,13 @@
       </div>
 
       <div class="c-transport">
-        <button class="c-btn c-btn--primary" id="btn-play" aria-label="Start or stop the metronome">Play</button>
-        <button class="c-btn" id="btn-reset" aria-label="Reset current tempo to start tempo">Reset</button>
+        <button class="c-btn c-btn--icon c-btn--primary" id="btn-play" aria-label="Play">
+          <svg class="c-icon c-icon--play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4.5v15l13-7.5z"/></svg>
+          <svg class="c-icon c-icon--pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.5h4.2v15H6.5zM13.3 4.5h4.2v15h-4.2z"/></svg>
+        </button>
+        <button class="c-btn c-btn--icon" id="btn-reset" aria-label="Reset to start tempo">
+          <svg class="c-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V1.8L6.8 6 12 10.2V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
+        </button>
       </div>
       <p class="c-caption c-caption--center">space toggles play&thinsp;/&thinsp;pause</p>
     </section>
@@ -48,7 +54,7 @@
       <div class="c-row">
         <div class="c-row__lead">
           <label class="c-row__label" for="input-start">Start tempo</label>
-          <p class="c-caption">tap it in — press <kbd class="c-kbd">S</kbd></p>
+          <p class="c-caption">drag, type, or press <kbd class="c-kbd">S</kbd> to tap</p>
         </div>
         <div class="c-row__controls">
           <button class="c-btn c-btn--tap" id="tap-start">tap</button>
@@ -59,7 +65,7 @@
       <div class="c-row">
         <div class="c-row__lead">
           <label class="c-row__label" for="input-end">End tempo</label>
-          <p class="c-caption">tap it in — press <kbd class="c-kbd">E</kbd></p>
+          <p class="c-caption">drag, type, or press <kbd class="c-kbd">E</kbd> to tap</p>
         </div>
         <div class="c-row__controls">
           <button class="c-btn c-btn--tap" id="tap-end">tap</button>
@@ -125,6 +131,7 @@
       </div>
 
     </section>
+    </div>
 
   </main>
   <script src="app.js"></script>

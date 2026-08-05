@@ -94,10 +94,12 @@ function scheduleClick(time, accent) {
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
   osc.type = "sine";
-  osc.frequency.value = accent ? 1660 : 1000;
-  const decay = accent ? 0.09 : 0.04;
-  gain.gain.setValueAtTime(1, time);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + decay);
+  osc.frequency.value = accent ? 1568 : 932;
+  const attack = 0.005;
+  const decay = accent ? 0.19 : 0.1;
+  gain.gain.setValueAtTime(0.0001, time);
+  gain.gain.exponentialRampToValueAtTime(0.85, time + attack);
+  gain.gain.exponentialRampToValueAtTime(0.0001, time + decay);
   osc.connect(gain);
   gain.connect(masterGain);
   osc.start(time);
@@ -226,7 +228,8 @@ const els = {
 
 function render() {
   els.bpm.textContent = runtime.currentBpm;
-  els.play.textContent = runtime.playing ? "Pause" : "Play";
+  els.play.classList.toggle("is-playing", runtime.playing);
+  els.play.setAttribute("aria-label", runtime.playing ? "Pause" : "Play");
   els.rampStart.textContent = settings.startBpm;
   els.rampEnd.textContent = settings.endBpm;
   const span = settings.endBpm - settings.startBpm;
@@ -263,10 +266,53 @@ function bindNumberInput(el, key) {
   });
 }
 
+// Drag a number vertically to scrub its value; a plain click still focuses for typing.
+function makeScrubbable(el, key, pxPerStep) {
+  let pointerId = null;
+  let startY = 0;
+  let startValue = 0;
+  let dragging = false;
+
+  el.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    pointerId = event.pointerId;
+    startY = event.clientY;
+    startValue = settings[key];
+    dragging = false;
+  });
+
+  el.addEventListener("pointermove", (event) => {
+    if (event.pointerId !== pointerId) return;
+    const dy = startY - event.clientY;
+    if (!dragging) {
+      if (Math.abs(dy) < 4) return;
+      dragging = true;
+      el.setPointerCapture(pointerId);
+      el.blur();
+      el.classList.add("is-scrubbing");
+    }
+    setSetting(key, clamp(startValue + dy / pxPerStep, LIMITS[key]));
+  });
+
+  const endDrag = (event) => {
+    if (event.pointerId !== pointerId) return;
+    pointerId = null;
+    dragging = false;
+    el.classList.remove("is-scrubbing");
+  };
+  el.addEventListener("pointerup", endDrag);
+  el.addEventListener("pointercancel", endDrag);
+}
+
 bindNumberInput(els.start, "startBpm");
 bindNumberInput(els.end, "endBpm");
 bindNumberInput(els.bars, "barsPerLoop");
 bindNumberInput(els.increment, "increment");
+
+makeScrubbable(els.start, "startBpm", 3);
+makeScrubbable(els.end, "endBpm", 3);
+makeScrubbable(els.bars, "barsPerLoop", 3);
+makeScrubbable(els.increment, "increment", 10);
 
 els.timesig.addEventListener("change", () => setSetting("timeSignature", els.timesig.value));
 
