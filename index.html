@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Froggywater — Ramping Metronome for Practice</title>
+  <meta name="description" content="Froggywater is a free ramping metronome and speed trainer. Set a starting tempo, a goal tempo, and a bar loop — it gradually increases the BPM as you practice, from where you are to where you want to be.">
+  <meta name="keywords" content="metronome, ramping metronome, speed trainer, tempo trainer, practice metronome, gradually increase tempo, BPM trainer, tap tempo">
+  <meta property="og:title" content="Froggywater — Ramping Metronome">
+  <meta property="og:description" content="A metronome that gradually ramps the tempo while you practice. Set a start BPM, a goal BPM, and a bar loop — Froggywater does the rest.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#101614">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="o-container c-app">
+    <h1 class="c-app__title">Froggywater</h1>
+
+    <section class="c-hero" aria-label="Current tempo">
+      <div class="c-hero__stage">
+        <svg class="c-hero__ring" viewBox="0 0 200 200" aria-hidden="true">
+          <circle class="c-hero__ring-track" cx="100" cy="100" r="90"></circle>
+          <circle class="c-hero__ring-progress" id="ring-progress" cx="100" cy="100" r="90"></circle>
+        </svg>
+        <div class="c-hero__readout" id="hero-pulse">
+          <div class="c-hero__bpm" id="hero-bpm">60</div>
+          <div class="c-hero__unit">BPM</div>
+        </div>
+      </div>
+      <div class="c-transport">
+        <button class="c-btn c-btn--primary" id="btn-play" aria-label="Start or stop the metronome">Start</button>
+        <button class="c-btn" id="btn-reset" aria-label="Reset current tempo to start tempo">Reset</button>
+      </div>
+      <p class="c-hint c-hint--transport">Space bar toggles play / pause</p>
+    </section>
+
+    <section class="c-controls" aria-label="Metronome settings">
+      <div class="c-field c-field--tempo">
+        <label class="c-field__label" for="input-start">Start tempo</label>
+        <input class="c-field__input" id="input-start" type="number" min="20" max="300" step="1" inputmode="numeric">
+        <button class="c-btn c-btn--tap" id="tap-start">Tap</button>
+        <p class="c-hint">press <kbd class="c-kbd">S</kbd> to tap</p>
+      </div>
+
+      <div class="c-field c-field--tempo">
+        <label class="c-field__label" for="input-end">End tempo</label>
+        <input class="c-field__input" id="input-end" type="number" min="20" max="300" step="1" inputmode="numeric">
+        <button class="c-btn c-btn--tap" id="tap-end">Tap</button>
+        <p class="c-hint">press <kbd class="c-kbd">E</kbd> to tap</p>
+      </div>
+
+      <div class="c-field">
+        <label class="c-field__label" for="input-bars">Bars per loop</label>
+        <input class="c-field__input" id="input-bars" type="number" min="1" max="999" step="1" inputmode="numeric">
+      </div>
+
+      <div class="c-field">
+        <label class="c-field__label" for="input-increment">BPM increment</label>
+        <input class="c-field__input" id="input-increment" type="number" min="1" max="20" step="1" inputmode="numeric">
+      </div>
+
+      <div class="c-field">
+        <label class="c-field__label" for="input-timesig">Time signature</label>
+        <select class="c-field__input c-field__input--select" id="input-timesig">
+          <option value="4/4">4/4</option>
+          <option value="3/4">3/4</option>
+          <option value="2/4">2/4</option>
+          <option value="2/2">2/2</option>
+          <option value="5/4">5/4</option>
+          <option value="6/8">6/8</option>
+          <option value="7/8">7/8</option>
+          <option value="9/8">9/8</option>
+          <option value="12/8">12/8</option>
+        </select>
+      </div>
+
+      <div class="c-field">
+        <label class="c-field__label" for="input-volume">Volume</label>
+        <input class="c-field__input c-field__input--range" id="input-volume" type="range" min="0" max="100" step="1">
+      </div>
+
+      <div class="c-field c-field--toggle">
+        <label class="c-field__label" for="input-emphasize">Emphasize the 1</label>
+        <input class="c-toggle" id="input-emphasize" type="checkbox">
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
