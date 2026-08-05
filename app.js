@@ -77,13 +77,22 @@ const SCHEDULER_INTERVAL = 25; // ms
 const pulseQueue = [];
 
 function ensureAudio() {
+  // iOS: route Web Audio to the "playback" category so the hardware
+  // silent switch doesn't mute the metronome (iOS 16.4+).
+  if (navigator.audioSession) navigator.audioSession.type = "playback";
   if (!audioCtx) {
-    audioCtx = new AudioContext();
+    const AC = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AC();
     masterGain = audioCtx.createGain();
     masterGain.connect(audioCtx.destination);
     applyVolume();
+    // iOS unlock: a sound must actually start inside the user gesture.
+    const unlock = audioCtx.createBufferSource();
+    unlock.buffer = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
+    unlock.connect(audioCtx.destination);
+    unlock.start(0);
   }
-  if (audioCtx.state === "suspended") audioCtx.resume();
+  if (audioCtx.state !== "running") audioCtx.resume();
 }
 
 function applyVolume() {
@@ -343,6 +352,15 @@ document.addEventListener("keydown", (event) => {
     tapStart();
   } else if (event.code === "KeyE") {
     tapEnd();
+  }
+});
+
+// iOS suspends the context on phone calls, screen lock, or tab switches
+// and doesn't always resume it — nudge it back when we regain focus.
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && runtime.playing && audioCtx) {
+    runtime.nextNoteTime = Math.max(runtime.nextNoteTime, audioCtx.currentTime + 0.05);
+    ensureAudio();
   }
 });
 
