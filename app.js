@@ -208,7 +208,9 @@ function makeTapper(onTempo) {
 const els = {
   bpm: document.getElementById("hero-bpm"),
   pulse: document.getElementById("hero-pulse"),
-  ring: document.getElementById("ring-progress"),
+  rampLine: document.getElementById("ramp-line"),
+  rampStart: document.getElementById("ramp-start"),
+  rampEnd: document.getElementById("ramp-end"),
   play: document.getElementById("btn-play"),
   reset: document.getElementById("btn-reset"),
   start: document.getElementById("input-start"),
@@ -222,16 +224,16 @@ const els = {
   tapEnd: document.getElementById("tap-end"),
 };
 
-const RING_CIRCUMFERENCE = 2 * Math.PI * 90;
-
 function render() {
   els.bpm.textContent = runtime.currentBpm;
-  els.play.textContent = runtime.playing ? "Pause" : "Start";
+  els.play.textContent = runtime.playing ? "Pause" : "Play";
+  els.rampStart.textContent = settings.startBpm;
+  els.rampEnd.textContent = settings.endBpm;
   const span = settings.endBpm - settings.startBpm;
   const progress = span === 0
     ? 1
     : Math.min(1, Math.max(0, (runtime.currentBpm - settings.startBpm) / span));
-  els.ring.style.strokeDashoffset = RING_CIRCUMFERENCE * (1 - progress);
+  els.rampLine.style.setProperty("--progress", progress);
 }
 
 function renderInputs() {
